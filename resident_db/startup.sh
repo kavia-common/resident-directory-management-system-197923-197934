@@ -129,6 +129,12 @@ GRANT CREATE ON SCHEMA public TO ${DB_USER};
 \dn+ public
 EOF
 
+# Apply repository-managed schema + seed data (repeatable)
+echo ""
+echo "Applying schema and seed migrations (if needed)..."
+chmod +x ./run_migrations.sh 2>/dev/null || true
+DB_NAME="${DB_NAME}" DB_USER="${DB_USER}" DB_PASSWORD="${DB_PASSWORD}" DB_PORT="${DB_PORT}" ./run_migrations.sh
+
 # Save connection command to a file
 echo "psql postgresql://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}" > db_connection.txt
 echo "Connection string saved to db_connection.txt"
